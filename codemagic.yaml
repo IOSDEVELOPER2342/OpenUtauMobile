@@ -1,1 +1,42 @@
 
+workflows:
+  openutau-ios:
+    name: OpenUtau Mobile iOS
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+
+    environment:
+      xcode: 16.4
+
+    scripts:
+      - name: Install .NET 9
+        script: |
+          curl -sSL https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh
+          chmod +x dotnet-install.sh
+          ./dotnet-install.sh --channel 9.0
+
+      - name: Install MAUI iOS workload
+        script: |
+          export PATH="$HOME/.dotnet:$PATH"
+          dotnet workload install maui-ios
+
+      - name: Restore project
+        script: |
+          export PATH="$HOME/.dotnet:$PATH"
+          dotnet restore OpenUtauMobile/OpenUtauMobile.csproj \
+            -p:TargetFramework=net9.0-ios
+
+      - name: Build iOS
+        script: |
+          export PATH="$HOME/.dotnet:$PATH"
+          dotnet publish OpenUtauMobile/OpenUtauMobile.csproj \
+            -f net9.0-ios \
+            -c Debug \
+            -p:ArchiveOnBuild=true \
+            -p:RuntimeIdentifier=ios-arm64 \
+            -p:TargetFrameworks=net9.0-ios
+
+    artifacts:
+      - OpenUtauMobile/bin/Debug/net9.0-ios/ios-arm64/publish/*.ipa
+      - OpenUtauMobile/bin/Debug/net9.0-ios/ios-arm64/publish/*.app
+
