@@ -6,7 +6,7 @@ workflows:
     instance_type: mac_mini_m2
 
     environment:
-      xcode: 16.4
+  xcode: 26.5
 
     scripts:
       - name: Install .NET 9
