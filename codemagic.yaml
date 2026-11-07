@@ -25,16 +25,18 @@ workflows:
           dotnet restore OpenUtauMobile/OpenUtauMobile.csproj -p:TargetFramework=net9.0-ios
 
       
+      
       - name: Build iOS
         script: |
           export PATH="$HOME/.dotnet:$PATH"
           dotnet publish OpenUtauMobile/OpenUtauMobile.csproj \
             -f net9.0-ios \
-            -c Debug \
-            -p:ArchiveOnBuild=true \
+            -c Release \
             -p:EnableCodeSigning=false \
             -p:RuntimeIdentifier=ios-arm64 \
-            -p:TargetFrameworks=net9.0-ios
+            -p:TargetFrameworks=net9.0-ios \
+            -p:ArchiveOnBuild=false
+
 
 
     artifacts:
